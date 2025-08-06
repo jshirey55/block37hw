@@ -3,6 +3,8 @@ const router = express.Router()
 export default router
 
 import { getPlaylistById, getPlaylists, createPlaylist } from "#db/queries/playlists"
+import { createPlaylistTrack } from "#db/queries/playlist_tracks"
+import { getTracksByPlaylistId } from "#db/queries/tracks"
 
 router
     .route("/")
@@ -10,7 +12,6 @@ router
     const playlists = await getPlaylists()
     res.send(playlists)
 })
-
 .post(async (req, res) => {
     if(!req.body) return res.status(400).send("Request must have a body")
             
@@ -18,7 +19,7 @@ router
     if (!name || !description)
         return res.status(400).send("REQ must have name, desc.")
 
-    const playlist = await createPlaylist({ name, description })
+    const playlist = await createPlaylist(name, description)
             res.status(201).send(playlist)
 })
 

@@ -13,7 +13,7 @@ router
 router.route("/:id").get(async (req, res) => {
     const track = await getTrackById(req.params.id)
     if(!track) return res.status(404).send("Track not found")
-    res.send(req.track)
+    res.send(track)
 })
 
 export default router
