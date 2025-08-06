@@ -19,7 +19,7 @@ export async function getPlaylists() {
     SELECT *
     FROM playlists
     `;
-    const { rows: playlists } = await db.query(SQL, [name, description])
+    const { rows: playlists } = await db.query(SQL)
     return playlists
 }
 

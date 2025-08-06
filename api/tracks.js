@@ -10,21 +10,9 @@ router
         res.send(tracks)
     })
 
-router.param("id", async (req, res, next, id) => {
-    if (!/^\d+$/.test(id)) {
-        return res.status(400).send("ID must be positive int.")
-    }
-
-    const track = await getTrackById(id)
-    if (!track) {
-        return res.status(404).send("Track not found")
-    }
-    
-    req.track = track
-    next()
-})
-
-router.route("/:id").get((req, res) => {
+router.route("/:id").get(async (req, res) => {
+    const track = await getTrackById(req.params.id)
+    if(!track) return res.status(404).send("Track not found")
     res.send(req.track)
 })
 

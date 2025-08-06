@@ -7,8 +7,8 @@ import { getPlaylistById, getPlaylists, createPlaylist } from "#db/queries/playl
 router
     .route("/")
     .get(async (req, res) => {
-    const playlist = await getPlaylists()
-    res.status(200).send(playlist)
+    const playlists = await getPlaylists()
+    res.send(playlists)
 })
 
 .post(async (req, res) => {
@@ -23,13 +23,8 @@ router
 })
 
 router.param("id", async (req, res, next, id) => {
-    if (!/^\d+$/.test(id))
-        return res.status(400).send("ID must be positive int.")
-    
     const playlist = await getPlaylistById(id)
     if(!playlist) return res.status(404).send("Playlist not found")
-
-    
 
     req.playlist = playlist
     next()
@@ -39,6 +34,18 @@ router.route("/:id").get((req, res) => {
     res.send(req.playlist)
 })
 
-.put(async (req, res) => {
-    if (!req.body) return res.status(400).json("Request must have a body")
-})
+router
+    .route("/:id/tracks")
+    .get(async (req, res) => {
+        const tracks = await getTracksByPlaylistId(req.playlist.id);
+        res.send(tracks);
+  })
+    .post(async (req, res) => {
+        if (!req.body) return res.status(400).send("Request body is required.");
+
+    const { trackId } = req.body;
+        if (!trackId) return res.status(400).send("Request body requires: trackId");
+
+    const playlistTrack = await createPlaylistTrack(req.playlist.id, trackId);
+    res.status(201).send(playlistTrack);
+  });

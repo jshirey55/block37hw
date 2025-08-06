@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS playlist_tracks;
 CREATE TABLE tracks (
     id serial PRIMARY KEY,
     name text NOT NULL,
-    duration_ms int NOT NULL
+    duration_ms integer NOT NULL
 );
 
 CREATE TABLE playlists (
@@ -17,7 +17,8 @@ CREATE TABLE playlists (
 CREATE TABLE playlist_tracks (
     id serial PRIMARY KEY,
     playlist_id integer NOT NULL REFERENCES playlists(id) ON DELETE CASCADE,
-    track_id integer NOT NULL REFERENCES tracks(id) ON DELETE CASCADE
+    track_id integer NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,
+    UNIQUE (playlist_id, track_id)
 );
 
 
